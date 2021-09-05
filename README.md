@@ -14,9 +14,11 @@ However, in return for this breakage, your drone *is* able to salvage some final
 
 ---
 
-This is a fully standalone mod for Duskers (i.e. no mod loader or library needed) that only adds a new drone upgrade. It's fully functional and integrated into the game - it shows up in the help menu, saves and loads, is obtainable randomly in derelicts, etc.
+This is a fully standalone mod for Duskers (i.e. no mod framework or library needed) that only adds a new drone upgrade. It's fully functional and integrated into the game - it shows up in the help menu, saves and loads, is obtainable randomly in derelicts, etc.
 
 The patches that make this possible are smart and flexible and can (probably) be reused by multiple different mods without breaking.
+
+Installation instructions can be found on the [DuskersGive](https://github.com/LoganDark/DuskersGive) page; namely, this mod should be loaded by UnityModManager.
 
 The specific steps I had to follow to add a new upgrade are:
 
