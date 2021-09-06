@@ -129,24 +129,24 @@ namespace DuskersScavenger {
 			public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator il) {
 				CodeInstruction lastInstr = null;
 
-				Label? switchEndLabel = null;
+				Label? afterSwitchLabel = null;
 				CodeInstruction loadDefinition = null;
 				CodeInstruction storeUpgrade = null;
 
 				foreach (CodeInstruction instr in instructions) {
 					if (lastInstr != null) {
-						if (lastInstr.opcode == OpCodes.Switch && instr.opcode == OpCodes.Br) switchEndLabel = (Label) instr.operand;
+						if (lastInstr.opcode == OpCodes.Switch && instr.opcode == OpCodes.Br) afterSwitchLabel = (Label) instr.operand;
 						else if (instr.Is(OpCodes.Newobj, gatherCtor)) loadDefinition = lastInstr;
 						else if (lastInstr.Is(OpCodes.Newobj, gatherCtor)) storeUpgrade = instr;
 					}
 
 					List<Label> labels = instr.labels;
-					if (switchEndLabel is Label switchEndLabel2 && labels.Contains(switchEndLabel2)) {
+					if (afterSwitchLabel is Label afterSwitchLabel2 && labels.Contains(afterSwitchLabel2)) {
 						Label afterLabel = il.DefineLabel();
-						labels.Remove(switchEndLabel2);
+						labels.Remove(afterSwitchLabel2);
 						labels.Add(afterLabel);
 
-						yield return new CodeInstruction(OpCodes.Ldarg_0).WithLabels(new[] { switchEndLabel2 });
+						yield return new CodeInstruction(OpCodes.Ldarg_0).WithLabels(new[] { afterSwitchLabel2 });
 						yield return new CodeInstruction(OpCodes.Ldc_I4, upgradeId);
 						yield return new CodeInstruction(OpCodes.Bne_Un, afterLabel);
 						yield return new CodeInstruction(loadDefinition.opcode, loadDefinition.operand);
